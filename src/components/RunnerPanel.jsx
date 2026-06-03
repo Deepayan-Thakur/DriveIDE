@@ -155,7 +155,21 @@ export default function RunnerPanel({ activeFile, workspaceTree, onGetFileConten
           });
         }
         
-        pyodideRef.current = await window.loadPyodide();
+        const pyodideInstance = await window.loadPyodide();
+        
+        // Patch input() using window.prompt() synchronously
+        await pyodideInstance.runPythonAsync(`
+          import builtins
+          import js
+          def custom_input(prompt=""):
+              val = js.prompt(prompt)
+              if val is None:
+                  raise KeyboardInterrupt("Input prompt cancelled")
+              return val
+          builtins.input = custom_input
+        `);
+        
+        pyodideRef.current = pyodideInstance;
         setPyodideLoading(false);
       }
 
