@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { 
   FolderIcon, 
-  Settings, 
   LogOut, 
   RefreshCw, 
   FilePlus, 
@@ -25,8 +24,6 @@ import {
 } from '../services/googleDriveService';
 import FileTreeItem from './FileTreeItem';
 import RunnerPanel from './RunnerPanel';
-import SettingsModal from './SettingsModal';
-
 export default function EditorPage({ onLogout }) {
   const [workspaceId, setWorkspaceId] = useState(null);
   const [workspaceTree, setWorkspaceTree] = useState([]);
@@ -35,7 +32,6 @@ export default function EditorPage({ onLogout }) {
   const [activeFile, setActiveFile] = useState(null); // Active file item
   const [fileContents, setFileContents] = useState({}); // { [fileId]: content }
   const [savingStatus, setSavingStatus] = useState('saved'); // 'saved', 'unsaved', 'saving'
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const autoSaveTimerRef = useRef({});
@@ -322,10 +318,6 @@ export default function EditorPage({ onLogout }) {
           <button className="btn-icon" title="Save File (Ctrl+S)" onClick={triggerManualSave}>
             <Save size={16} />
           </button>
-          
-          <button className="btn-icon" title="Settings" onClick={() => setIsSettingsOpen(true)}>
-            <Settings size={16} />
-          </button>
 
           <button className="btn-icon" title="Disconnect Drive" onClick={handleLogout} style={{ color: '#ff3366' }}>
             <LogOut size={16} />
@@ -449,12 +441,6 @@ export default function EditorPage({ onLogout }) {
           />
         </div>
       </div>
-
-      <SettingsModal 
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onSave={() => loadWorkspaceContents()}
-      />
     </div>
   );
 }

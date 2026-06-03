@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FolderGit, Settings, Play, Database, ShieldAlert, Cpu } from 'lucide-react';
-import SettingsModal from './SettingsModal';
+import { FolderGit, Play, Database, ShieldAlert, Cpu } from 'lucide-react';
 
 export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
   const hasCredentials = !!(
     import.meta.env.VITE_GDRIVE_CLIENT_ID &&
     import.meta.env.VITE_GDRIVE_API_KEY
@@ -13,7 +10,7 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
 
   const handleStartCoding = () => {
     if (!hasCredentials) {
-      setIsSettingsOpen(true);
+      alert("API Credentials are not configured. Please add VITE_GDRIVE_CLIENT_ID and VITE_GDRIVE_API_KEY to your environment variables (.env.local or production variables) to enable Drive connection.");
     } else {
       if (isAuthed) {
         onStart();
@@ -21,11 +18,6 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
         onAuthRequest();
       }
     }
-  };
-
-  const handleCredentialsSaved = () => {
-    // Notify app that credentials updated
-    window.location.reload();
   };
 
   return (
@@ -68,10 +60,6 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
         <button className="btn-primary" onClick={handleStartCoding}>
           <Play size={18} fill="currentColor" />
           {isAuthed ? 'Open Editor' : hasCredentials ? 'Authorize Google Drive' : 'Configure API'}
-        </button>
-        <button className="btn-secondary" onClick={() => setIsSettingsOpen(true)}>
-          <Settings size={18} />
-          Connection Status
         </button>
       </motion.div>
 
@@ -153,11 +141,6 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
         </ol>
       </motion.div>
 
-      <SettingsModal 
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onSave={handleCredentialsSaved}
-      />
     </div>
   );
 }
