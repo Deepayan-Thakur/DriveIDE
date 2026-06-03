@@ -1,22 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { FolderGit, Play, Database, ShieldAlert, Cpu } from 'lucide-react';
+import { FolderGit, Play, Database, Cpu } from 'lucide-react';
 
 export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
-  const hasCredentials = !!(
-    import.meta.env.VITE_GDRIVE_CLIENT_ID &&
-    import.meta.env.VITE_GDRIVE_API_KEY
-  );
-
   const handleStartCoding = () => {
-    if (!hasCredentials) {
-      alert("API Credentials are not configured. Please add VITE_GDRIVE_CLIENT_ID and VITE_GDRIVE_API_KEY to your environment variables (.env.local or production variables) to enable Drive connection.");
+    if (isAuthed) {
+      onStart();
     } else {
-      if (isAuthed) {
-        onStart();
-      } else {
-        onAuthRequest();
-      }
+      onAuthRequest();
     }
   };
 
@@ -59,33 +50,9 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
       >
         <button className="btn-primary" onClick={handleStartCoding}>
           <Play size={18} fill="currentColor" />
-          {isAuthed ? 'Open Editor' : hasCredentials ? 'Authorize Google Drive' : 'Configure API'}
+          {isAuthed ? 'Open Editor' : 'Authorize Google Drive'}
         </button>
       </motion.div>
-
-      {/* Credentials Alert if missing */}
-      {!hasCredentials && (
-        <motion.div 
-          className="glass-panel" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px', 
-            padding: '12px 24px', 
-            marginBottom: '3rem', 
-            border: '1px solid rgba(255, 171, 0, 0.2)',
-            backgroundColor: 'rgba(255, 171, 0, 0.05)'
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          <ShieldAlert size={20} style={{ color: '#ffab00' }} />
-          <span style={{ fontSize: '0.9rem', color: '#ffd166' }}>
-            Setup Google API Credentials in your environment variables (.env.local) to enable Drive connection.
-          </span>
-        </motion.div>
-      )}
 
       {/* Grid of Key Features */}
       <motion.div 
@@ -123,22 +90,6 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
             Run Javascript or preview HTML/CSS pages live in a preview box. Compile Python natively in the browser via Pyodide.
           </p>
         </div>
-      </motion.div>
-
-      {/* Simple instructions preview */}
-      <motion.div 
-        className="config-preview"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        <div className="config-title">Quick Connection Guide</div>
-        <ol className="config-steps">
-          <li>Enable the Google Drive API in Google Cloud Console.</li>
-          <li>Create an OAuth Client ID for Web Applications (with Authorized Origin <code>http://localhost:5173</code>).</li>
-          <li>Create an API Key and add both to your project's <code>.env.local</code> file.</li>
-          <li>Click "Authorize" to link DriveIDE to your specific Drive folder.</li>
-        </ol>
       </motion.div>
 
     </div>
