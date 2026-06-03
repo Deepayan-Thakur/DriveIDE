@@ -23,8 +23,12 @@ export default function App() {
         await loadGoogleApiScripts();
         setScriptsLoaded(true);
 
-        const clientId = localStorage.getItem('gdrive_client_id') || import.meta.env.VITE_GDRIVE_CLIENT_ID;
-        const apiKey = localStorage.getItem('gdrive_api_key') || import.meta.env.VITE_GDRIVE_API_KEY;
+        // Actively clear legacy credentials from localStorage to ensure they cannot be retrieved
+        localStorage.removeItem('gdrive_client_id');
+        localStorage.removeItem('gdrive_api_key');
+
+        const clientId = import.meta.env.VITE_GDRIVE_CLIENT_ID;
+        const apiKey = import.meta.env.VITE_GDRIVE_API_KEY;
 
         if (clientId && apiKey) {
           await initDriveClient({

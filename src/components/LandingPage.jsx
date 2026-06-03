@@ -7,8 +7,8 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const hasCredentials = !!(
-    (localStorage.getItem('gdrive_client_id') || import.meta.env.VITE_GDRIVE_CLIENT_ID) &&
-    (localStorage.getItem('gdrive_api_key') || import.meta.env.VITE_GDRIVE_API_KEY)
+    import.meta.env.VITE_GDRIVE_CLIENT_ID &&
+    import.meta.env.VITE_GDRIVE_API_KEY
   );
 
   const handleStartCoding = () => {
@@ -67,11 +67,11 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
       >
         <button className="btn-primary" onClick={handleStartCoding}>
           <Play size={18} fill="currentColor" />
-          {isAuthed ? 'Open Editor' : hasCredentials ? 'Authorize Google Drive' : 'Setup Drive Connection'}
+          {isAuthed ? 'Open Editor' : hasCredentials ? 'Authorize Google Drive' : 'Configure API'}
         </button>
         <button className="btn-secondary" onClick={() => setIsSettingsOpen(true)}>
           <Settings size={18} />
-          Configure API
+          Connection Status
         </button>
       </motion.div>
 
@@ -94,7 +94,7 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
         >
           <ShieldAlert size={20} style={{ color: '#ffab00' }} />
           <span style={{ fontSize: '0.9rem', color: '#ffd166' }}>
-            Setup Google API Credentials in the top right Configuration before connecting.
+            Setup Google API Credentials in your environment variables (.env.local) to enable Drive connection.
           </span>
         </motion.div>
       )}
@@ -148,7 +148,7 @@ export default function LandingPage({ isAuthed, onStart, onAuthRequest }) {
         <ol className="config-steps">
           <li>Enable the Google Drive API in Google Cloud Console.</li>
           <li>Create an OAuth Client ID for Web Applications (with Authorized Origin <code>http://localhost:5173</code>).</li>
-          <li>Create an API Key. Add both in the settings panel.</li>
+          <li>Create an API Key and add both to your project's <code>.env.local</code> file.</li>
           <li>Click "Authorize" to link DriveIDE to your specific Drive folder.</li>
         </ol>
       </motion.div>
